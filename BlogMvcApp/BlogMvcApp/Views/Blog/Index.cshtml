@@ -1,0 +1,99 @@
+﻿@model IEnumerable<BlogMvcApp.Models.Blog>
+
+@{
+    ViewBag.Title = "Index";
+}
+@if (TempData["Blog"] != null)
+{
+    var blog = (BlogMvcApp.Models.Blog)TempData["Blog"];
+    <div class="alert alert-success" role="alert">
+        <strong style="color:green;">
+            @blog.Baslik
+        </strong>
+        başlıklı blog güncellendi.
+    </div>
+}
+<h2>Blog Listesi</h2>
+<hr />
+<p>
+    @Html.ActionLink("Yeni Blog Ekle", "Create", null, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Anasayfaya Dön", "Index", "Home", null, new { @class = "btn btn-primary" })
+</p>
+<hr />
+
+
+<table class="table table-bordered table-hover table-striped" style="width:1200px;">
+    <!--Yeni classlarla tabloya özellik kazandırdık-->
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.KategoriAdi) <!--DisplayNameFor model'in içindeki property adını alır-->
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Baslik)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Resim)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EklenmeTarihi)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Onay)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Anasayfa)
+        </th>
+        <th style="width:285px;">
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="background-color:cornflowerblue">
+                <!--Bu şekilde css kodlarımızı kullanabiliriz-->
+                @Html.DisplayFor(modelItem => item.Category.KategoriAdi) <!--DisplayFor model'in içindeki property'nin değerini alır-->
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Baslik)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Resim)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EklenmeTarihi)
+            </td>
+            <td>
+                <!--Bu sütunda onaylılara renk verdik -->
+                @if (item.Onay)
+                {
+                    <label class="text-success">Onaylı</label>
+                }
+                else
+                {
+                    <label class="text-danger">Onay bekliyor</label>
+                }
+
+            </td>
+            <td>
+                @if (item.Anasayfa)
+                {
+                    <label class="text-success">Anasayfa</label>
+                }
+                else
+                {
+                    <label class="text-danger">Anasayfa değil</label>
+                }
+            </td>
+            <td>
+                <!--Bu sütunda ActionLink'lere new { class="btn btn-warning btn-xs"} diyerek yeni butonlar tanımladık-->
+                @Html.ActionLink("Güncelleme", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-xs" })
+                @Html.ActionLink("Detay", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-xs" }) |
+                @Html.ActionLink("Silme", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+
+            </td>
+        </tr>
+    }
+
+</table>

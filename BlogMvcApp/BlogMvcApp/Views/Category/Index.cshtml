@@ -1,0 +1,58 @@
+﻿@model IEnumerable<BlogMvcApp.Models.CategoryModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Kategori Listesi</h2>
+<hr>
+<p>
+    @Html.ActionLink("Kategori Ekle", "Create", null, new { @class = "btn btn-primary" })
+</p>
+<hr />
+
+@if (TempData["Kategori"] != null && TempData["EskiKategori"] != null)
+{
+    var eskiKategori = TempData["EskiKategori"]; //bir model tutmadığım için aşağıdaki gibi dönüştürme yapmıyorum
+    var kategori = (BlogMvcApp.Models.Category)TempData["Kategori"];
+
+    <div class="alert alert-success" role="alert">
+        <strong style="color:green;">
+            @eskiKategori
+        </strong>
+        adlı kategori
+        <strong style="color:green;">
+            @kategori.KategoriAdi
+        </strong>
+        adlı kategori olarak güncellendi.
+    </div>
+}
+<table class="table table-bordered table-hover table-striped" style="width:1200px;">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.KategoriAdi) <!--DisplayNameFor model'in içindeki property adını alır-->
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BlogSayisi)
+        </th>
+        <th style="width:285px;"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.KategoriAdi) <!--DisplayFor model'in içindeki property'nin değerini alır-->
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BlogSayisi)
+            </td>
+            <td>
+                @Html.ActionLink("Güncelleme", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-xs " })
+                @Html.ActionLink("Detay", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-xs" }) |
+                @Html.ActionLink("Silme", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+            </td>
+        </tr>
+    }
+
+</table>

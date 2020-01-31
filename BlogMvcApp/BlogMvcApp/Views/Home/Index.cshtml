@@ -1,0 +1,27 @@
+﻿@model IEnumerable<BlogMvcApp.Models.BlogModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<marquee behavior=alternate>
+
+    <img src="~/Img/eliotconsole.png" style="height:200px; width:auto;">
+
+</marquee>
+
+<br />
+<h2>Anasayfa Blog Listesi</h2>
+
+@Html.Partial("BlogListesi", Model)
+<!--İkinci yollanan değer ile Model içinde ki verileride partial'a yolluyoruz, ama o partial'a
+    bu verilerin yollanabilmesi için onun da bu view 'in bulunduğu aynı klasörde olması lazım
+    yada en iyi yol bu partial'ı shared'in içine alırız-->
+@section SagKolon
+    {
+    @Html.Partial("Search")
+    @{Html.RenderAction("KategoriListesi", "Category");}
+    <!--Bu yapı da partial view'dir ama controller'da ki action
+    direkt olarak partial çalıştırdığı için renderAction() kullanabildik-->
+}
+
+

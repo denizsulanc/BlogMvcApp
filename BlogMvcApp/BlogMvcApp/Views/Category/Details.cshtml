@@ -1,0 +1,28 @@
+﻿@model BlogMvcApp.Models.Category
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Kategori Detayı</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.KategoriAdi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KategoriAdi)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Güncelleme", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Kategori Listesine geri dön", "Index")
+</p>
+@section SagKolon
+    {    
+    @{Html.RenderAction("KategoriListesi", "Category");}
+}

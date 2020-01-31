@@ -1,0 +1,138 @@
+Not:Eğer bir hazır template kullanmak istiyorsan onu indirip projenin içine dahil etmen gereklidir sonradan isteğin sayfalar üzerinden kopyalayıp kullanabilirsin
+
+1)projeye sağ tıklayıp nuget paketlerinden eksik yapıyı (bootstrap vs) kurabilirsin
+
+2)HomeController oluşturup içindeki Index action'ından bir view yaratmalısın
+
+3) aşağıdaki kodu layout sayfasında container bölümü için kullanabiliriz
+<div class="row">
+            <div class="col-md-12">
+                @RenderBody()
+            </div>
+        </div>    
+
+4)kullandığın bootstrap sürümüne göre yaptığın projelerde bootstrap'ın class adlarında değişiklikler olabilir internetten bakabilirsin
+
+5)Entity sınıflarını oluştur
+
+6)Context
+
+*Modelin içine (ProjeAdı)Context diyerek Context sınıfını oluştur.
+*Oluşturduğun sınıfa :DbContext diyerek miras ver bunun içinde projeye tıklayıp nuggetlardan entity paketini indir
+*Initializer çağır
+
+public BlogContext():base("blogVeriTabani") diyerek veritabanı adı verebiliriz veya connection string oluştururuz içine ConnectionStrings name'i yazılır
+        {
+            Database.SetInitializer(new BlogInitializer());
+        }
+
+7)Initializer
+
+*Modelin içine (ProjeAdı)Initializer adında bir sınıf oluştur test verileri için.
+*:DropCreateDatabaseIfModelChanges<BlogContext> den sınıfa miras veriyoruz model değiştiğinde etkilesin diye.
+*Sınıfın içine override yazıp boşluk bırakınca seed methodu yazılır aşağıdaki gibi;
+
+protected override void Seed(BlogContext context) 
+        {
+		 //Bu bölümde entitylere eleman eklemeler yapılır ve context'e atılır sonra context.SaveChanges() denir.
+		 base.Seed(context);
+        }
+		
+*Global.asax.cs'nin içindeki Application_Start()'da Initializer'ı başlatabiliriz veya Context sınıfının constructor'ında çağırabiliriz 
+		
+8)ConnectionStrings
+
+<configuration> bu yapının içinde bulunacak
+
+ <connectionStrings>
+    <add name="blogDb" connectionString="server=(localdb)\MSSQLLocalDB;database=blogVeriTabani;integrated security=SSPI" providerName="System.Data.SqlClient"/>
+ </connectionStrings>
+
+</configuration> 
+
+9)Controllers yapılarını oluştur entity ile hazır crud(select,insert vs) yapıları eklensin onu seç
+
+10)View'de model alırken;
+@model IEnumerable<BlogMvcApp.Models.Blog> şeklinde çağırıyoruz
+
+Not:eğer bir tablonun genişliğini ayarlicaksan table etiketinin içine style="width:1200px;" yazabilirsin sonrasında th'lerin boyutlarını ayarlarsın aynı şekilde
+
+Not:View'de @if gibi yapıların içinde tekrar if kullanacaksan içeride ki if'in başına @ işareti koymana gerek yoktur hata alırsın
+
+Not:Kontrolden View'e taşınan TempData["örnek"] için önce null olmadığını kontrol edip sonrasında tip dönüşümünü yapmalısın 
+eğer bir sınıf modeline dönüştüreceksen (BlogMvcApp.Models.Category)TempData["örnek"] şeklinde kullanmalısın 
+
+11)Section : bir View sayfasında belirttiğimiz içi dolu section'ı layout sayfasında kullanabiliriz;
+
+Aşağıdaki View bölümü kullanımı;
+
+@section SagKolon
+    {
+		//Burada html ile oluşturulmuş aypıları kullanabiliriz
+	}
+	
+Aşağıdaki Layout'da çağırılıp kullanımı;
+	
+	<div class="container body-content p-4">
+        <div class="row mb-4">
+            @if (IsSectionDefined("Slider"))
+            {
+                @RenderSection("Slider")
+            }
+        </div>
+        <div class="row">
+            @if (IsSectionDefined("SagKolon"))//Eğer bu isimde bir section varsa bu yapıyı kullan demektir
+            {
+                <div class="col-md-8">
+                    @RenderBody()
+                </div>
+                <div class="col-md-4">
+                    @RenderSection("SagKolon")
+                </div>
+            }
+            else
+            {
+                <div class="col-md-12">
+                    @RenderBody()
+                </div>                
+            }
+        </div>
+12)PartialView ise her View de kullanılabilecek parça View oluşturuyoruz Örnek:Kategori listemizi sayfaların hepsinde görmek isteyebiliriz tek tek yazmak yerine bu yapıyı kullanıyoruz
+
+ public PartialViewResult KategoriListesi() //Önce Category Controller'ına bir PartialViewResult ekliyoruz ve bir görünüm sayfası oluşturuyoruz 
+        {
+            return PartialView(db.Kategoriler.ToList());
+        }
+		
+Aşağıdaki gibi bir cshtml sayfasında istediğimiz yapıyı oluşturup bunu başka Viewlerin bir bölümü olarak kullanabiliyoruz 
+hatta bir section'ı varsa o Viewlerin içerisine ekleyebiliyoruz 
+		
+		@model IEnumerable<BlogMvcApp.Models.Category>
+<h2>KategoriListesi</h2>
+<div class="row">
+    <ul class="list-group">
+        <li class="list-group-item">Kategoriler Listesi</li>
+
+        <li class="list-group-item list-group-item-primary">A simple primary list group item</li>
+        <li class="list-group-item list-group-item-secondary">A simple secondary list group item</li>
+        <li class="list-group-item list-group-item-success">A simple success list group item</li>
+        <li class="list-group-item list-group-item-danger">A simple danger list group item</li>
+        <li class="list-group-item list-group-item-warning">A simple warning list group item</li>
+        <li class="list-group-item list-group-item-info">A simple info list group item</li>
+        <li class="list-group-item list-group-item-light">A simple light list group item</li>
+        <li class="list-group-item list-group-item-dark">A simple dark list group item</li>
+    </ul>
+</div>
+ 
+Not: @Html.Partial("BlogListesi", Model)
+<!--İkinci yollanan değer ile Model içinde ki verileride partial'a yolluyoruz, ama o partial'a
+    bu verilerin yollanabilmesi için onun da bu view 'in bulunduğu aynı klasörde olması lazım
+    yada en iyi yol bu partial'ı shared'in içine alırız-->
+	 
+     @{Html.RenderAction("KategoriListesi", "Category");}
+<!--Bu yapı da partial view'dir ama controller'da ki action
+    direkt olarak partial çalıştırdığı için renderAction() kullanabildik-->
+	
+13)fontawesome.com'dan icon kullanabilirsin
+
+Not: Url kısmında action adının yazılıp içeriğinin görülmesini istemiyorsak control kısmında o action'ın üst tarafına [ChildActiononly] dememiz yeterli olacaktır

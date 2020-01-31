@@ -1,0 +1,98 @@
+﻿@model BlogMvcApp.Models.Blog
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h1>@Model.Baslik</h1>
+<hr />
+
+<p>
+    @Model.EklenmeTarihi
+</p>
+<hr />
+@if (TempData["kategoriAdi"] != null)
+{
+    var kategori = (BlogMvcApp.Models.Category)TempData["kategoriAdi"];
+
+    if (kategori.KategoriAdi == "C#") //TempData yapısını kullanırken tip dönüşümlerini yapmalısın
+    {
+        <img class="img-fluid" src="~/Img/mrrobot.jpg" style="height:300px; width:auto;" />
+        <!--img-fluid responsive yapar-->
+    }
+    else if (kategori.KategoriAdi == "Asp.net MVC")
+    {
+        <img class="img-fluid" src="~/Img/darlenenet.jpg" style="height:300px; width:auto;" />
+    }
+    else if (kategori.KategoriAdi == "Windows Form")
+    {
+        <img class="img-fluid" src="~/Img/form.png" style="height:300px; width:auto;" />
+    }
+    else if (kategori.KategoriAdi == "C# Console")
+    {
+        <img class="img-fluid" src="~/Img/eliotconsole.png" style="height:300px; width:auto;" />
+    }
+    else if (kategori.KategoriAdi == "SQL")
+    {
+        <img class="img-fluid" src="~/Img/sql.jpg" style="height:300px; width:auto;" />
+    }
+    else if (kategori.KategoriAdi == "Diziler")
+    {
+        <img class="img-fluid" src="~/Img/dominique.jpg" style="height:300px; width:auto;" />
+    }
+}
+
+<hr />
+
+<blockquote class="blockquote">
+    <p>@Model.Aciklama</p>
+</blockquote>
+<hr />
+
+<p>
+    @Model.Icerik
+</p>
+<hr />
+
+<p class="mt-2">
+    @Html.ActionLink("Güncelleme", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Blog listesine geri dön", "Index", null, new { @class = "btn btn-primary" })
+</p>
+<hr />
+
+<!--aşağısı yorum yapmak için form-->
+<div class="card">
+    <div class="card-body">
+        <h4>Yorum yap: </h4>
+        <div class="form-group row">
+            <textarea class="form-control" rows="3"></textarea>
+            <button class="btn btn-primary mt-2">Kaydet</button>
+        </div>
+    </div>
+    <!--aşağısı yorum yapılan yorumları göstermek için-->
+    <h4 class="ml-4">Blog için yapılan yorumlar:</h4>
+    <hr />
+    <div class="media ml-1">
+        <img src="..." class="mr-3" alt="...">
+        <div class="media-body">
+            <h5 class="mt-0">Media heading</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+
+            <div class="media mt-3">
+                <a class="mr-3" href="#">
+                    <img src="..." class="mr-3" alt="...">
+                </a>
+                <div class="media-body">
+                    <h5 class="mt-0">Media heading</h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section SagKolon
+    {
+    @{Html.RenderAction("KategoriListesi", "Category");}
+}
+
